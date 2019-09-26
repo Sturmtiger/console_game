@@ -3,8 +3,13 @@ from random import shuffle
 
 
 def game():
-    player = Player(input('Enter your name to start the game: '))
+    player_name = input('Enter your name to start the game: ').strip()
+    while len(player_name) == 0:
+        player_name = input('Enter your name to start the game, please: ').strip()
+
+    player = Player(player_name)
     computer = Computer()
+
     score = {player.name: 0, computer.name: 0}
 
     game_condition = True
@@ -12,8 +17,9 @@ def game():
         print(f' Welcome to the console game, {player.name}! '.center(70, '*'), end='\n\n')
         users_deck = [player, computer]
 
-        for user in users_deck:
-            user.health = 100
+        if player.health < 100 or computer.health < 100:
+            for user in users_deck:
+                user.health = 100
 
         shuffle(users_deck)  # Random sequence of players moves
         move_counter = 0

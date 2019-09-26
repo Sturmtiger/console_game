@@ -5,7 +5,7 @@ from weights import WeightedChoice
 class Player:
     def __init__(self, name):
         self.health = 100
-        self.name = name.strip()
+        self.name = name
 
     def __str__(self):
         return str(f'[{self.name}] player health: {self.health}hp.')
@@ -39,14 +39,15 @@ class Computer(Player):
     def __init__(self):
         super().__init__('Computer')
 
+    # selection of possible actions against an enemy
     def __actions_selection(self):
         actions = list()
         for action in dir(Player)[::-1]:
             if action.startswith('_'):
                 break
-            elif action == 'heal_yourself' and self.health > 82:
+            elif action == 'heal_yourself' and self.health > 82:  # if hp > 82 exclude possibility 'heal yourself'
                 continue
-            actions.append([action, 1])
+            actions.append([action, 1])  # append action with its weight in list format
         return actions
 
     # method for auto move (special for Computer)
@@ -55,7 +56,7 @@ class Computer(Player):
         actions_gen = WeightedChoice(actions)
 
         if self.health <= 35:
-            actions_gen.increase_chance('heal_yourself', 3)
+            actions_gen.increase_chance('heal_yourself', 3)  # increase chance by 3 times
         action = actions_gen.get_item()
 
         if action == 'heal_yourself':
