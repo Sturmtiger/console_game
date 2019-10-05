@@ -10,9 +10,14 @@ Takes an argument in this format only: [['Name', weight(int type)], ..., ['Somet
     def __init__(self, weights):
         self.totals = list()
         self.weights = weights
-        running_total = 0
+        self.__load_weights()
 
-        for w in weights:
+    # for weights loading only (also for reloading when using "increase_chance" method)
+    def __load_weights(self):
+        if self.totals:
+            self.totals = list()
+        running_total = 0
+        for w in self.weights:
             running_total += w[1]
             self.totals.append(running_total)
 
@@ -22,7 +27,8 @@ Takes an argument in this format only: [['Name', weight(int type)], ..., ['Somet
         return self.weights[i][0]
 
     def increase_chance(self, action_name, chance):
-        for i, item in enumerate(self.weights):
+        for item in self.weights:
             if action_name == item[0]:
                 item[1] = chance
+                self.__load_weights()
                 break
